@@ -41,7 +41,9 @@ open class VideoEditorConfiguration: EditorConfiguration {
     
     /// 音乐配置
     public lazy var music: Music = .init()
-    
+    public lazy var cropTime: VideoCropTimeConfiguration = .init()
+    public lazy var cropSize: EditorCropSizeConfiguration = .init()
+    public lazy var cropConfirmView: CropConfirmViewConfiguration = .init()
     /// 滤镜配置
     public lazy var filter: Filter = .init(infos: PhotoTools.defaultVideoFilters())
     
@@ -109,6 +111,6 @@ open class VideoEditorConfiguration: EditorConfiguration {
             imageName: "hx_editor_tools_filter",
             type: .filter
         )
-        return .init(toolOptions: [graffiti, chartlet, text, music, /*cropSize,*/ cropTime, filter])
+        return .init(toolOptions: [graffiti, chartlet, text, music, cropSize, cropTime, filter])
     }()
 }

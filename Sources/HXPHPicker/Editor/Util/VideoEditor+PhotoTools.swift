@@ -723,7 +723,7 @@ extension PhotoTools {
         return pixelBuffer
     }
     
-    static func cropOrientation(
+    static func cropOrientation1(
         _ cropSizeData: VideoEditorCropSizeData
     ) -> UIImage.Orientation {
         getOrientation(

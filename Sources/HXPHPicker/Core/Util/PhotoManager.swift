@@ -91,7 +91,7 @@ public final class PhotoManager: NSObject {
     var audioPlayer: AVAudioPlayer?
     var audioPlayFinish: (() -> Void)?
     #endif
-    
+    var sampleBuffer: CMSampleBuffer?
     #if HXPICKER_ENABLE_PICKER || HXPICKER_ENABLE_CAMERA
     var cameraPreviewImage: UIImage? = PhotoTools.getCameraPreviewImage()
     func saveCameraPreview() {
