@@ -105,14 +105,8 @@ extension PhotoAsset {
                 #endif
             }
             #if HXPICKER_ENABLE_EDITOR
-            if let ImageURL = simplify.photoEdit?.editedImageURL,
-               FileManager.default.fileExists(atPath: ImageURL.path) {
-                photoAsset?.photoEdit = simplify.photoEdit
-            }
-            if let videoURL = simplify.videoEdit?.editedURL,
-               FileManager.default.fileExists(atPath: videoURL.path) {
-                photoAsset?.videoEdit = simplify.videoEdit
-            }
+            photoAsset?.photoEdit = simplify.photoEdit
+            photoAsset?.videoEdit = simplify.videoEdit
             #endif
         } catch  {
             print(error)

@@ -122,7 +122,6 @@ extension UIImageView {
                     }
                 case .networkVideo:
                     asset.networkVideoAsset?.coverImage = value.image
-                    asset.networkVideoAsset?.videoSize = value.image.size
                 default: break
                 }
                 completionHandler?(value.image, nil, asset)
@@ -174,9 +173,6 @@ extension UIImageView {
         var videoURL: URL?
         if let videoAsset = asset.networkVideoAsset {
             if let coverImage = videoAsset.coverImage {
-                if videoAsset.videoSize.equalTo(.zero) {
-                    asset.networkVideoAsset?.videoSize = coverImage.size
-                }
                 completionHandler?(coverImage, asset)
                 return nil
             }else {
@@ -189,9 +185,6 @@ extension UIImageView {
             }
         }else if let videoAsset = asset.localVideoAsset {
             if let coverImage = videoAsset.image {
-                if videoAsset.videoSize.equalTo(.zero) {
-                    asset.localVideoAsset?.videoSize = coverImage.size
-                }
                 completionHandler?(coverImage, asset)
                 return nil
             }
@@ -205,16 +198,12 @@ extension UIImageView {
             atTime: 0.1,
             imageGenerator: imageGenerator
         ) { videoURL, image, result in
-            if let image = image {
-                if asset.isNetworkAsset {
-                    asset.networkVideoAsset?.videoSize = image.size
-                    asset.networkVideoAsset?.coverImage = image
-                }else {
-                    asset.localVideoAsset?.videoSize = image.size
-                    asset.localVideoAsset?.image = image
-                }
-            }
             if result == .cancelled { return }
+            if asset.isNetworkAsset {
+                asset.networkVideoAsset?.coverImage = image
+            }else {
+                asset.localVideoAsset?.image = image
+            }
             completionHandler?(image, asset)
         }
     }

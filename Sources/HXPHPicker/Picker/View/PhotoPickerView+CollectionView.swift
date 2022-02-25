@@ -309,7 +309,7 @@ extension PhotoPickerView: UICollectionViewDelegate {
             if isExceedsTheLimit {
                 config = manager.config.videoEditor.mutableCopy() as! VideoEditorConfiguration
                 config.defaultState = .cropTime
-                config.cropTime.maximumVideoCroppingTime = TimeInterval(
+                config.cropping.maximumVideoCroppingTime = TimeInterval(
                     manager.config.maximumSelectedVideoDuration
                 )
                 config.mustBeTailored = true

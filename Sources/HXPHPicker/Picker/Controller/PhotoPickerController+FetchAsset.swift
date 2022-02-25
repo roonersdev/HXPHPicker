@@ -124,12 +124,6 @@ extension PhotoPickerController {
                     return
                 }
                 if let assetCollection = assetCollection {
-                    if let collection = assetCollection.collection,
-                       let canAdd = self.pickerDelegate?.pickerController(self, didFetchAssetCollections: collection) {
-                        if !canAdd {
-                            return
-                        }
-                    }
                     assetCollection.count += localCount
                     if isCameraRoll {
                         self.assetCollectionsArray.insert(assetCollection, at: 0)
@@ -236,9 +230,7 @@ extension PhotoPickerController {
             photoAssets.reserveCapacity(assetCollection?.count ?? 10)
             var lastAsset: PhotoAsset?
             assetCollection?.enumerateAssets( usingBlock: { [weak self] (photoAsset, index, stop) in
-                guard let self = self,
-                      let phAsset = photoAsset.phAsset
-                else {
+                guard let self = self else {
                     stop.pointee = true
                     return
                 }
@@ -246,18 +238,13 @@ extension PhotoPickerController {
                     stop.pointee = true
                     return
                 }
-                if let canAdd = self.pickerDelegate?.pickerController(self, didFetchAssets: phAsset) {
-                    if !canAdd {
-                        return
-                    }
-                }
                 if self.selectOptions.contains(.gifPhoto) {
-                    if phAsset.isImageAnimated {
+                    if photoAsset.phAsset!.isImageAnimated {
                         photoAsset.mediaSubType = .imageAnimated
                     }
                 }
                 if self.config.selectOptions.contains(.livePhoto) {
-                    if phAsset.isLivePhoto {
+                    if photoAsset.phAsset!.isLivePhoto {
                         photoAsset.mediaSubType = .livePhoto
                     }
                 }
@@ -275,10 +262,11 @@ extension PhotoPickerController {
                     videoCount += 1
                 }
                 var asset = photoAsset
-                if let index = selectedAssets.firstIndex(of: phAsset) {
-                    let selectPhotoAsset = selectedPhotoAssets[index]
-                    asset = selectPhotoAsset
-                    lastAsset = selectPhotoAsset
+                if selectedAssets.contains(asset.phAsset!) {
+                    let index = selectedAssets.firstIndex(of: asset.phAsset!)!
+                    let phAsset: PhotoAsset = selectedPhotoAssets[index]
+                    asset = phAsset
+                    lastAsset = phAsset
                 }
                 photoAssets.append(asset)
             })

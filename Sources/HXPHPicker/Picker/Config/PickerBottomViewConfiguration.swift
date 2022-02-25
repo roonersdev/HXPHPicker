@@ -69,10 +69,10 @@ public struct PickerBottomViewConfiguration {
     public var finishButtonTitleDarkColor: UIColor = .white
     
     /// 完成按钮禁用下的标题颜色
-    public var finishButtonDisableTitleColor: UIColor = .white.withAlphaComponent(0.4)
+    public var finishButtonDisableTitleColor: UIColor = .white.withAlphaComponent(0.6)
     
     /// 暗黑风格下完成按钮禁用下的标题颜色
-    public var finishButtonDisableTitleDarkColor: UIColor = .white.withAlphaComponent(0.4)
+    public var finishButtonDisableTitleDarkColor: UIColor = .white.withAlphaComponent(0.6)
     
     /// 完成按钮选中时的背景颜色
     public var finishButtonBackgroundColor: UIColor = .systemTintColor
@@ -81,10 +81,10 @@ public struct PickerBottomViewConfiguration {
     public var finishButtonDarkBackgroundColor: UIColor = .systemTintColor
     
     /// 完成按钮禁用时的背景颜色
-    public var finishButtonDisableBackgroundColor: UIColor = .systemTintColor.withAlphaComponent(0.4)
+    public var finishButtonDisableBackgroundColor: UIColor = .systemTintColor
     
     /// 暗黑风格下完成按钮禁用时的背景颜色
-    public var finishButtonDisableDarkBackgroundColor: UIColor = .systemTintColor.withAlphaComponent(0.4)
+    public var finishButtonDisableDarkBackgroundColor: UIColor = .systemTintColor
     
     /// 未选择资源时是否禁用完成按钮
     public var disableFinishButtonWhenNotSelected: Bool = true

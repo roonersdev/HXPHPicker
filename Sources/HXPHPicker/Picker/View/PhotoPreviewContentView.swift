@@ -117,11 +117,7 @@ open class PhotoPreviewContentView: UIView {
     }
     
     func updateContentSize(image: UIImage) {
-        if height == 0 || width == 0 {
-            delegate?.contentView(updateContentSize: self)
-            return
-        }
-        let needUpdate = (width / height) != (image.width / image.height)
+        let needUpdate = width / height != image.width / image.height
         if needUpdate {
             delegate?.contentView(updateContentSize: self)
         }
@@ -318,6 +314,7 @@ extension PhotoPreviewContentView {
                 let url = PhotoTools.getVideoCacheURL(for: key)
                 checkNetworkVideoFileSize(url)
                 networkVideoRequestCompletion(url)
+                delegate?.contentView(updateContentSize: self)
                 return
             }
             if PhotoManager.shared.loadNetworkVideoMode == .play {
@@ -342,8 +339,6 @@ extension PhotoPreviewContentView {
                 if let url = url {
                     if let videoAsset = self.photoAsset.networkVideoAsset,
                        videoAsset.videoSize.equalTo(.zero) {
-                        let image = PhotoTools.getVideoThumbnailImage(videoURL: url, atTime: 0.1)
-                        self.photoAsset.networkVideoAsset?.videoSize = image?.size ?? .zero
                         self.delegate?.contentView(updateContentSize: self)
                     }
                     self.checkNetworkVideoFileSize(url)

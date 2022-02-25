@@ -30,11 +30,11 @@ extension PhotoPickerViewController {
             swipeSelectAutoScroll()
         }
     }
-    
+    // swiftlint:disable cyclomatic_complexity
     func changedPanGestureRecognizer(
         panGR: UIPanGestureRecognizer,
-        localPoint: CGPoint
-    ) {
+        localPoint: CGPoint) {
+        // swiftlint:enable cyclomatic_complexity
         let lastIndexPath = collectionView.indexPathForItem(at: localPoint)
         if let lastIndex = lastIndexPath?.item,
            let lastIndexPath = lastIndexPath {

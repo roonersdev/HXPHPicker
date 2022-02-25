@@ -58,15 +58,9 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
         didSet {
             updateSelectedState(isSelected: photoAsset.isSelected, animated: false)
             photoView.photoAsset = photoAsset
-            if isRequestDirectly {
-                request()
-            }
+            requestThumbnailImage()
+            requestICloudState()
         }
-    }
-    
-    open func request() {
-        requestThumbnailImage()
-        requestICloudState()
     }
     
     /// 初始化
@@ -126,7 +120,6 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
         if PhotoManager.shared.thumbnailLoadMode == .simplify {
             return
         }
-        iCloundLoading = true
         iCloudRequestID = photoAsset.requestICloudState { [weak self] photoAsset, inICloud in
             guard let self = self,
                   self.photoAsset == photoAsset else {
@@ -134,7 +127,6 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
             }
             self.iCloudRequestID = nil
             self.requestICloudStateCompletion(inICloud)
-            self.iCloundLoading = false
         }
     }
     
@@ -156,15 +148,8 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
     }
     
     open func cancelICloudRequest() {
-        if iCloundLoading {
-            iCloundLoading = false
-        }
-        if requestICloudCompletion {
-            requestICloudCompletion = false
-        }
-        if inICloud {
-            inICloud = false
-        }
+        requestICloudCompletion = false
+        inICloud = false
         if let id = iCloudRequestID {
             PHImageManager.default().cancelImageRequest(id)
             iCloudRequestID = nil
@@ -174,7 +159,9 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         initView()
-//        addLoadModeObserver()
+        if PhotoManager.shared.hasThumbnailLoadMode {
+            addLoadModeObserver()
+        }
     }
     open override func layoutSubviews() {
         super.layoutSubviews()
@@ -188,8 +175,6 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
             }
         }
     }
-    var isRequestDirectly = true
-    var iCloundLoading = false
     var requestICloudCompletion = false
     var observation: Any?
     deinit {
@@ -205,43 +190,28 @@ open class PhotoPickerBaseViewCell: UICollectionViewCell {
 }
 
 extension PhotoPickerBaseViewCell {
-    func reload() {
-        self.photoView.reloadImage()
-        if !self.requestICloudCompletion && !self.iCloundLoading {
-            self.requestICloudState()
-        }
+    
+    private func addLoadModeObserver() {
+        observation = NotificationCenter
+            .default
+            .addObserver(
+                forName: .ThumbnailLoadModeDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                guard let self = self else { return }
+                let mode = PhotoManager.shared.thumbnailLoadMode
+                if mode == .simplify {
+                    self.photoView.cancelRequest()
+                    if !self.requestICloudCompletion {
+                        self.cancelICloudRequest()
+                    }
+                    return
+                }
+                self.photoView.reloadImage()
+                if !self.requestICloudCompletion {
+                    self.requestICloudState()
+                }
+            }
     }
-    func cancelReload() {
-        self.photoView.cancelRequest()
-        if !self.requestICloudCompletion {
-            self.cancelICloudRequest()
-        }
-    }
-//    private func addLoadModeObserver() {
-//        observation = NotificationCenter
-//            .default
-//            .addObserver(
-//                forName: .ThumbnailLoadModeDidChange,
-//                object: nil,
-//                queue: .main
-//            ) { [weak self] notification in
-//                guard let self = self else { return }
-//                let mode = PhotoManager.shared.thumbnailLoadMode
-//                if mode == .simplify {
-//                    self.photoView.cancelRequest()
-//                    if !self.requestICloudCompletion {
-//                        self.cancelICloudRequest()
-//                    }
-//                    return
-//                }
-//                if let needReload = notification.userInfo?["needReload"] as? Bool,
-//                   !needReload {
-//                    return
-//                }
-//                self.photoView.reloadImage()
-//                if !self.requestICloudCompletion && !self.iCloundLoading {
-//                    self.requestICloudState()
-//                }
-//            }
-//    }
 }
