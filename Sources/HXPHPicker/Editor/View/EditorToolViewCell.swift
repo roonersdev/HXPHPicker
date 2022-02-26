@@ -25,10 +25,14 @@ class EditorToolViewCell: UICollectionViewCell {
     }()
     
     lazy var button: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton.init(type: .custom)
+            button.translatesAutoresizingMaskIntoConstraints  = false
         button.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
-        button.tintColor = .white
-        return button
+              button.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+              button.backgroundColor =  UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
+              button.layer.cornerRadius = 25
+              button.imageView?.tintColor =  UIColor.white
+              return button
     }()
     
     @objc func didButtonClick() {

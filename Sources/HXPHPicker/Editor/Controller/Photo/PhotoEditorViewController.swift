@@ -58,7 +58,6 @@ open class PhotoEditorViewController: BaseViewController {
         self.config = config
         self.editResult = editResult
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = config.modalPresentationStyle
     }
     
     #if HXPICKER_ENABLE_PICKER
@@ -84,7 +83,6 @@ open class PhotoEditorViewController: BaseViewController {
         self.editResult = editResult
         self.photoAsset = photoAsset
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = config.modalPresentationStyle
     }
     #endif
     
@@ -111,7 +109,6 @@ open class PhotoEditorViewController: BaseViewController {
         self.config = config
         self.editResult = editResult
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = config.modalPresentationStyle
     }
     #endif
     var pState: State = .normal
@@ -190,9 +187,12 @@ open class PhotoEditorViewController: BaseViewController {
     }()
     
     public lazy var topView: UIView = {
-        let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 0, height: 44))
-        let cancelBtn = UIButton.init(frame: CGRect(x: 0, y: 0, width: 57, height: 44))
-        cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
+        let view = UIView.init(frame: CGRect(x: 20, y: 0, width: 70, height: 90))
+        let cancelBtn = UIButton.init(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        cancelBtn.imageEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+        cancelBtn.backgroundColor =  UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
+        cancelBtn.layer.cornerRadius = 25
+        cancelBtn.setImage(UIImage.image(for: "backIcon"), for: .normal)
         cancelBtn.addTarget(self, action: #selector(didBackButtonClick), for: .touchUpInside)
         view.addSubview(cancelBtn)
         return view
@@ -259,10 +259,7 @@ open class PhotoEditorViewController: BaseViewController {
         if config.cropping.fixedRatio || config.cropping.isRoundCrop {
             showRatios = false
         }
-        let view = PhotoEditorCropToolView.init(
-            showRatios: showRatios,
-            scaleArray: config.cropping.aspectRatios
-        )
+        let view = PhotoEditorCropToolView.init(showRatios: showRatios)
         view.delegate = self
         view.themeColor = config.cropping.aspectRatioSelectedColor
         view.alpha = 0
